@@ -1,0 +1,12 @@
+[package]
+name = "forest_fire_graph"
+version = "0.1.0"
+authors = ["Alex Berry <highwaybobbery@gmail.com>"]
+
+[lib]
+name = "forest_lib"
+path = "src/forest_lib.rs"
+
+[dependencies]
+rand = "0.3.0"
+ansi_term = "*"
