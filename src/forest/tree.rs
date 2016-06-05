@@ -1,19 +1,19 @@
 extern crate ansi_term;
 extern crate rand;
 
-use std::fmt;
-use std::fmt::Display;
 use self::ansi_term::Colour::*;
 use self::rand::Rng;
 
-const NEW_TREE_PROB: f32 = 0.01;
+use std::fmt::Display;
+use std::fmt::Formatter;
+use std::fmt::Result;
+
+use super::Updatable;
+use super::Generation;
+
+const NEW_TREE_PROB: f32 = 0.005;
 const INITIAL_TREE_PROB: f32 = 0.5;
 const FIRE_PROB: f32 = 0.001;
-
-pub trait Updatable {
-  fn update(&mut self);
-}
-
 #[derive(Clone)]
 pub enum Tree {
   Empty,
@@ -22,8 +22,8 @@ pub enum Tree {
   Heating,
 }
 
-impl fmt::Display for Tree {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl Display for Tree {
+  fn fmt(&self, f: &mut Formatter) -> Result {
     write!(f, "{}", match *self {
       Tree::Empty => Black.paint(" "),
       Tree::Tree => Green.bold().paint("T"),
@@ -52,40 +52,6 @@ impl Updatable for Tree {
         }
         Tree::Burning => Tree::Empty,
         Tree::Heating => Tree::Burning,
-    }
-  }
-}
-
-pub struct Forest<T: Display + Updatable> {
-  pub width: usize,
-  pub height: usize,
-  pub trees: Vec<Vec<T>>,
-}
-
-impl <T: Display + Clone + Updatable> Forest <T> {
-  pub fn new(width: usize, height: usize, tree: T) -> Forest<T> {
-    Forest { width: width, height: height, trees: vec!(vec!(tree; width); height) }
-  }
-}
-
-impl <T: Display + Updatable> fmt::Display for Forest<T> {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    for row in self.trees.iter() {
-      for tree in row.iter() {
-        try!(write!(f, "{}", tree))
-      }
-      try!(write!(f, "\n"))
-    }
-    Ok(())
-  }
-}
-
-impl <T: Updatable + Display> Updatable for Forest<T> {
-  fn update(&mut self) {
-    for row in self.trees.iter_mut() {
-      for tree in row.iter_mut() {
-        tree.update();
-      }
     }
   }
 }

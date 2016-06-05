@@ -4,11 +4,12 @@ use std::io::BufWriter;
 use std::io::Stdout;
 use std::process::Command;
 use std::fmt;
+use forest::Generation;
 
-pub fn print_screen<T: fmt::Display>(state: &T, generation: u32) {
+pub fn print_screen<T: fmt::Display + Generation>(state: &T) {
     let mut writer = BufWriter::new(io::stdout());
     clear_screen(&mut writer);
-    writeln!(writer, "Generation: {}", generation).unwrap();
+    writeln!(writer, "Generation: {}", state.generation()).unwrap();
     write!(writer, "{}", state).unwrap();
 }
 

@@ -1,17 +1,32 @@
-extern crate forest_lib;
+mod forest;
+mod terminal_display;
+mod game_loop;
 
-use forest_lib::forest_array::*;
-use forest_lib::terminal_display::print_screen;
-use forest_lib::game_loop::run;
+use terminal_display::print_screen;
+use game_loop::run;
+
+use std::thread;
+use std::sync::{Arc, Mutex};
+
+use forest::Updatable;
+use forest::forest_array::Forest;
+use forest::tree::Tree;
+
 
 fn main() {
-  let mut ar_forest = Forest::new( 10, 10, Tree::Tree );
-  let mut generation = 0;
-  let program = || {
-    generation += 1;
-    ar_forest.update();
-    print_screen(&ar_forest, generation);
-  };
-  run(4, program);
-}
+  let forest = Arc::new(Mutex::new(Forest::new( 40, 20, Tree::Empty )));
 
+  let c_forest = forest.clone();
+  let _ = thread::spawn(move || {
+    loop {
+      {
+        let mut c_forest = c_forest.lock().unwrap();
+        c_forest.update();
+      }
+    }
+  });
+
+  run(5, ||{
+    print_screen(&*forest.lock().unwrap());
+  });
+}
