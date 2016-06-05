@@ -11,8 +11,8 @@ use std::fmt::Result;
 use super::Updatable;
 use super::Generation;
 
-const NEW_TREE_PROB: f32 = 0.005;
-const INITIAL_TREE_PROB: f32 = 0.5;
+const NEW_TREE_PROB: f32 = 0.001;
+const INITIAL_TREE_PROB: f32 = 0.25;
 const FIRE_PROB: f32 = 0.001;
 #[derive(Clone)]
 pub enum Tree {
@@ -30,6 +30,18 @@ impl Display for Tree {
       Tree::Burning => Red.bold().paint("B"),
       Tree::Heating => Yellow.bold().paint("T"),
     })
+  }
+}
+
+impl Default for Tree {
+  fn default() -> Tree {
+    if prob_check(INITIAL_TREE_PROB) == true {
+        print!("T");
+        Tree::Tree
+    } else {
+        print!("E");
+        Tree::Empty
+    }
   }
 }
 

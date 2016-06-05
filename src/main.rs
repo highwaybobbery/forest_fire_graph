@@ -14,7 +14,12 @@ use forest::tree::Tree;
 
 
 fn main() {
-  let forest = Arc::new(Mutex::new(Forest::new( 40, 20, Tree::Empty )));
+  let forest : Arc<Mutex<Forest<Tree>>> =
+    Arc::new(Mutex::new(Forest::new(40, 20)));
+
+  std::thread::sleep(std::time::Duration::from_millis(1000));
+  print_screen(&*forest.lock().unwrap());
+  std::thread::sleep(std::time::Duration::from_millis(1000));
 
   let c_forest = forest.clone();
   let _ = thread::spawn(move || {

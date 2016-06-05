@@ -15,16 +15,30 @@ pub struct Forest<T: Display + Updatable> {
   pub trees: Vec<Vec<T>>,
 }
 
-impl <T: Display + Clone + Updatable> Forest <T> {
-  pub fn new(width: usize, height: usize, tree: T) -> Forest<T> {
+impl <T: Display + Clone + Updatable + Default> Forest <T> {
+  pub fn new(width: usize, height: usize) -> Forest<T> {
     Forest {
       width: width,
       height: height,
-      trees: vec!(vec!(tree; width); height),
+      trees: default_trees(width, height),
       generation: 0
     }
   }
 }
+
+fn default_trees<T: Default>(width: usize, height: usize) -> Vec<Vec<T>> {
+  let mut t_rows = Vec::with_capacity(height);
+  for _ in 0..height {
+    let mut t_row = Vec::with_capacity(height);
+    for _ in 0..width {
+      t_row.push(<T>::default());
+    }
+    t_rows.push(t_row);
+  }
+  t_rows
+}
+
+
 
 impl <T: Display + Updatable> Display for Forest<T> {
   fn fmt(&self, f: &mut Formatter) -> Result {
