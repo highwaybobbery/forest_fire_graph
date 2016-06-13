@@ -14,6 +14,7 @@ use super::Generation;
 const NEW_TREE_PROB: f32 = 0.001;
 const INITIAL_TREE_PROB: f32 = 0.25;
 const FIRE_PROB: f32 = 0.001;
+
 #[derive(Clone)]
 pub enum Tree {
   Empty,

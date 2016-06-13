@@ -4,7 +4,6 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
 
-
 use super::Updatable;
 use super::Generation;
 
